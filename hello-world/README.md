@@ -7,6 +7,6 @@ You need to do the following:
 - Write a program to print hello world.
 
 ## Contributions Guidelines
-Please name your file as hello_world_(gthubhandle).
+Please name your file as hello_world_(gthubhandle)
 
 Eg. hello_world_hk1997.py
