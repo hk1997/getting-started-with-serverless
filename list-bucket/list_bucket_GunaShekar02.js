@@ -10,7 +10,7 @@
 //   return result;
 // };
 
-//ABOVE CODE USES ASYNC/AWAIT PATTERN. BELOW CODE USES PROMISES.
+//ABOVE CODE USES ASYNC/AWAIT PATTERN TO LIST OBJECTS. BELOW CODE USES PROMISES TO SEND EMAIL OF THE OBJECTS.
 
 const AWS = require('aws-sdk');
 
@@ -22,11 +22,48 @@ exports.handler = (event) => {
   };
   const result = s3.listObjects(params).promise();
   return result.then(data => {
-    const response = {
-      statusCode: 200,
-      body: JSON.stringify(data),
+    const email = new AWS.SES();
+    
+    let keys = [];
+    data.Contents.forEach(item => keys.push(item.Key));
+
+    let emailParams = {
+      Destination: { 
+        ToAddresses: [
+          'gunashekherproddatoori@gmail.com',
+        ]
+      },
+      Message: {
+        Body: { 
+          Text: {
+           Charset: "UTF-8",
+           Data: JSON.stringify(keys),
+          }
+         },
+         Subject: {
+          Charset: 'UTF-8',
+          Data: 'Objects in Bucket'
+         }
+        },
+      Source: 'gunashekherproddatoori@gmail.com',
     };
-    return response;
+    
+    const emailResponse = email.sendEmail(emailParams).promise();
+    return emailResponse.then(data => {
+      const response = {
+        statusCode: 200,
+        body: data.MessageId,
+      };
+      return response;
+    })
+    .catch(err => {
+      const response = {
+        statusCode: 403,
+        body: JSON.stringify(err),
+      }
+      return response;
+    });
+    
   })
   .catch(err => {
     const response = {
@@ -36,4 +73,5 @@ exports.handler = (event) => {
     return response;
   });
 };
+
 
