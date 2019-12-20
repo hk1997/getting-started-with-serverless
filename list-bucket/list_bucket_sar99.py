@@ -4,11 +4,12 @@ import logging
 
 
 s3 = boto3.resource('s3')
-bucket = s3.Bucket('issue2b')
+
 
 def lambda_handler(event, context):
+    bucket = s3.Bucket(event['bucketname'])
     SENDER = "saniya.rishi@gmail.com"
-    RECIPIENT = "saniya.rishi@gmail.com"
+    RECIPIENT = event['receiver']
     AWS_REGION = "us-west-2"
     SUBJECT = "Conetnts of the 'issue-2' bucket"
 
