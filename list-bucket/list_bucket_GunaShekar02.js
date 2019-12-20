@@ -35,7 +35,7 @@ exports.handler = async (event, context) => {
     };
     
     try {
-      const emailResponse = await ses.sendEmail(emailParams).promise();
+      await ses.sendEmail(emailParams).promise();
     } catch (err) {
       throw new Error(err);
     }
