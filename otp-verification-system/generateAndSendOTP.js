@@ -65,6 +65,7 @@ const generateAndSendOTP = async (email,phone) => {
   };
   await ses.sendEmail(emailParams).promise();
   
+  await sns.setSMSAttributes({"DefaultSMSType" : "Transactional"}).promise();
   const snsParams = {
     Message: `Your OTP is ${OTP}`,
     PhoneNumber: phone,
