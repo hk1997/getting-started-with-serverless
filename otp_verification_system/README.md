@@ -2,10 +2,11 @@
 Your are required to build an OTP verfication System.
 
 ### Requirements:
-- There should be three API's
+- There should be four API's
 1) To send otp to mobile number.
 2) To send otp to email address.
 3) To verify the received otp.
+4) To resend otp allowing atmost 3 retries.
 - There should be expiry of timeout of 5 minutes, after which the otp will expire.
 
 ### Suggested AWS services
