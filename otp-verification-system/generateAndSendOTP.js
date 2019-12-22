@@ -33,7 +33,7 @@ exports.handler = async (event, context) => {
 };
 
 const generateAndSendOTP = async (email,phone) => {
-  const OTP = Math.floor(Math.random() * 1999) + 1000;
+  const OTP = Math.floor(Math.random() * 8999) + 1000;
   const otpParams = {
     TableName: 'OTPs',
     Item: {
