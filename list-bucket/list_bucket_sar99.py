@@ -7,9 +7,11 @@ s3 = boto3.resource('s3')
 
 
 def lambda_handler(event, context):
-    bucket = s3.Bucket(event['bucketname'])
+    print(event)
+    record = event['Records'][0]
+    bucket = s3.Bucket(record['s3']['bucket']['name'])
     SENDER = "saniya.rishi@gmail.com"
-    RECIPIENT = event['receiver']
+    RECIPIENT = "saniya.rishi@gmail.com"
     AWS_REGION = "us-west-2"
     SUBJECT = "Conetnts of the 'issue-2' bucket"
 
