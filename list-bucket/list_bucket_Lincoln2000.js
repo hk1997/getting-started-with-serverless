@@ -4,8 +4,9 @@ const ses = new AWS.SES();
 
 exports.handler = async (event)=>{
     var listjson;
+    var buck = event["Records"][0]["s3"]["bucket"]["name"];
     var params = {
-        "Bucket": event.bucket
+        "Bucket": buck
     };
     try{
         listjson =  await s3.listObjectsV2(params).promise();
@@ -34,7 +35,7 @@ exports.handler = async (event)=>{
          }, 
          Subject: {
           Charset: charset, 
-          Data: "Contents of Bucket- " + event.bucket
+          Data: "Contents of Bucket- " + buck
          }
         },
         Source: myEmail
