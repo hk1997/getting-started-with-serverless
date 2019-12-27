@@ -1,0 +1,17 @@
+import json
+import boto3
+
+def lambda_handler(event, context):
+    s3 = boto3.resource('s3')
+    bucket = s3.Bucket('lambdabucketlist')
+    bucket_list = [] 
+    for item in bucket.objects.all():
+        bucket_list.append(item.key)
+    
+    print(f'Size of bucket is {len(bucket_list)}')
+    print(f'Bucket is : {bucket_list}')
+      
+    return {
+        'statusCode': 200,
+        'Bucket' : bucket_list
+    }
