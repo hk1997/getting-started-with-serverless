@@ -1,0 +1,72 @@
+import json
+import boto3
+from botocore.exceptions import ClientError
+
+SENDER = "tathagat812000@gmail.com"
+RECIPIENT ="tathagat812000@gmail.com"
+AWS_REGION = "us-east-1"
+SUBJECT = "sending list of object in bucket as email"
+def lambda_handler(event, context):
+    s3 = boto3.resource('s3')
+    bucket = s3.Bucket('lambdabucketlist')
+    bucket_list = [] 
+    for item in bucket.objects.all():
+        bucket_list.append(item.key)
+    BODY_TEXT = "New file added in bucket" + "lambdabucketlist: " + "\n"
+    index = 0
+    for item in bucket_list:
+        index +=1
+        BODY_TEXT = BODY_TEXT + str(index) + "." + str(item) + "\n"
+    BODY_HTML = """
+    <html>
+    <head></head>
+    <body>
+    <h1> List of objects in bucket </h1>
+    <p> """+BODY_TEXT+""" </p>
+    </body>
+    </html> """
+    
+     
+    CHARSET = "UTF-8"
+    client = boto3.client('ses',region_name = AWS_REGION)
+    try:
+     #Provide the contents of the email.
+       response = client.send_email(
+        Destination={
+            'ToAddresses': [
+                RECIPIENT,
+            ],
+        },
+        Message={
+            'Body': {
+                'Html': {
+                    'Charset': CHARSET,
+                    'Data': BODY_HTML,
+                },
+                'Text': {
+                    'Charset': CHARSET,
+                    'Data': BODY_TEXT,
+                },
+            },
+            'Subject': {
+                'Charset': CHARSET,
+                'Data': SUBJECT,
+            },
+        },
+        Source=SENDER,
+        )
+    
+    
+   # print(f'Size of bucket is {len(bucket_list)}')
+   #    print(f'Bucket is : {bucket_list}')
+      
+   # return {
+   #    'statusCode': 200,
+   #     'Bucket' : bucket_list
+   # }
+    except ClientError as e:
+       print(e.response['Error']['Message'])
+    else:
+       print("Email sent! Message ID:"),
+       print(response['MessageId'])
+    
